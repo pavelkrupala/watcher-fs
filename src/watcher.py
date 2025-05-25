@@ -111,17 +111,43 @@ class Watcher:
 
 # Example usage:
 if __name__ == "__main__":
-    def on_change(file_path: str, change_type: str):
-        print(f"File {file_path} {change_type}")
+    test_dir = Path("test_dir")
+    def on_change_simple():
+        print(f"Something changed.")
+    def on_change(change):
+        print(f"File {change}")
+
+    def create_test_files(file_names):
+        """Helper to create test files."""
+        for file_name in file_names:
+            file_path = test_dir / file_name
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(file_path, "w") as f:
+                if file_name.endswith(".txt"):
+                    f.write("Initial content")
+                else:  # .styl
+                    f.write("a = #fa0")
+
+    create_test_files(["aaa.txt", "bbb.txt", "ccc.txt"])
+    create_test_files(["skin.styl", "styl/default.styl", "styl/utils.styl"])
 
     watcher = Watcher()
-    watcher.register("test/test_dir/**/*.txt", on_change, TriggerType.PER_FILE)
-    watcher.register("test/test_dir/**/*.styl", on_change, TriggerType.ANY_FILE)
+    watcher.register("test_dir/**/*.txt", on_change_simple, TriggerType.PER_FILE)
+    watcher.register("test_dir/**/*.styl", on_change, TriggerType.ANY_FILE, callback_extra=True)
 
     # Simulate a check
     watcher.check()
 
     # do something
+    with open(test_dir / "aaa.txt", "w") as f:
+        f.write("Modified content")
+    with open(test_dir / "bbb.txt", "w") as f:
+        f.write("Modified content")
+
+    with open(test_dir / "skin.styl", "w") as f:
+        f.write("a = #0af")
+    with open(test_dir / "styl/default.styl", "w") as f:
+        f.write("a = #f00")
 
     # check again
     watcher.check()

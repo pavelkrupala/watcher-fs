@@ -25,11 +25,11 @@ class FileWatcher:
             # For callback_extra=False, call callback without parameters
             self.callback()
 
-
 class Watcher:
     def __init__(self):
         self.watchers: List[FileWatcher] = []  # List of registered watchers
-        self.tracked_files: Dict[str, Tuple[Set[int], float]] = {}  # Maps files to watcher indices
+        self.tracked_files: Dict[str, float] = {}  # Maps files to last modification time
+        self.file_to_watchers: Dict[str, Set[int]] = {}  # Maps files to watcher indices
         self.last_run_time: float = 0.0  # Time taken for last check
 
     def register(self, pattern: str, callback: Callable[..., None], trigger_type: TriggerType = TriggerType.PER_FILE, callback_extra: bool = False):
@@ -40,10 +40,16 @@ class Watcher:
 
         # Populate initial file list for this pattern
         for file_path in glob.glob(pattern, recursive=True):
-            if os.path.isfile(file_path):  # Only track files, not directories
+            if os.path.isfile(file_path):
+                # Normalize path to use forward slashes
+                file_path = str(Path(file_path).as_posix())
                 if file_path not in self.tracked_files:
-                    self.tracked_files[file_path] = (set(), os.path.getmtime(file_path))
-                self.tracked_files[file_path][0].add(watcher_index)
+                    try:
+                        self.tracked_files[file_path] = os.path.getmtime(file_path)
+                        self.file_to_watchers[file_path] = set()
+                    except OSError:
+                        continue  # Skip inaccessible files
+                self.file_to_watchers[file_path].add(watcher_index)
 
     def check(self):
         """Check for file changes and trigger callbacks."""
@@ -54,55 +60,61 @@ class Watcher:
         for watcher_index, watcher in enumerate(self.watchers):
             for file_path in glob.glob(watcher.path, recursive=True):
                 if os.path.isfile(file_path):
+                    # Normalize path to use forward slashes
+                    file_path = str(Path(file_path).as_posix())
                     current_files.setdefault(file_path, set()).add(watcher_index)
 
-        # Track which ANY_FILE watchers have been triggered in this cycle
+        # Track which ANY_FILE watchers have been triggered
         triggered_any_file: Set[int] = set()
-        # Collect changes for ANY_FILE with callback_extra=True
         any_file_changes: Dict[int, List[Tuple[str, str]]] = {i: [] for i in range(len(self.watchers))}
-
 
         # Detect deletions
         for file_path in list(self.tracked_files.keys()):
             if file_path not in current_files:
-                watcher_indices = self.tracked_files[file_path][0]
+                watcher_indices = self.file_to_watchers.get(file_path, set())
                 for watcher_index in watcher_indices:
                     watcher = self.watchers[watcher_index]
                     if watcher.trigger_type == TriggerType.PER_FILE:
                         watcher.dispatch_callback((file_path, "deleted"))
-                    elif watcher.trigger_type == TriggerType.ANY_FILE and watcher_index not in triggered_any_file:
+                    elif watcher.trigger_type == TriggerType.ANY_FILE:
                         any_file_changes[watcher_index].append((file_path, "deleted"))
-                del self.tracked_files[file_path]
-
+                # Clean up after callbacks
+                self.tracked_files.pop(file_path, None)
+                self.file_to_watchers.pop(file_path, None)
 
         # Detect additions and modifications
         for file_path, watcher_indices in current_files.items():
-            current_mtime = os.path.getmtime(file_path)
+            try:
+                current_mtime = os.path.getmtime(file_path)
+            except OSError:
+                continue  # Skip inaccessible files
             if file_path not in self.tracked_files:
                 # New file detected
-                self.tracked_files[file_path] = (watcher_indices, current_mtime)
+                self.tracked_files[file_path] = current_mtime
+                self.file_to_watchers[file_path] = watcher_indices
                 for watcher_index in watcher_indices:
                     watcher = self.watchers[watcher_index]
                     if watcher.trigger_type == TriggerType.PER_FILE:
                         watcher.dispatch_callback((file_path, "added"))
-                    elif watcher.trigger_type == TriggerType.ANY_FILE and watcher_index not in triggered_any_file:
+                    elif watcher.trigger_type == TriggerType.ANY_FILE:
                         any_file_changes[watcher_index].append((file_path, "added"))
             else:
                 # Check for modifications
-                prev_mtime = self.tracked_files[file_path][1]
+                prev_mtime = self.tracked_files[file_path]
                 if prev_mtime != current_mtime:
-                    self.tracked_files[file_path] = (watcher_indices, current_mtime)
+                    self.tracked_files[file_path] = current_mtime
+                    self.file_to_watchers[file_path] = watcher_indices
                     for watcher_index in watcher_indices:
                         watcher = self.watchers[watcher_index]
                         if watcher.trigger_type == TriggerType.PER_FILE:
                             watcher.dispatch_callback((file_path, "modified"))
-                        elif watcher.trigger_type == TriggerType.ANY_FILE and watcher_index not in triggered_any_file:
+                        elif watcher.trigger_type == TriggerType.ANY_FILE:
                             any_file_changes[watcher_index].append((file_path, "modified"))
 
         # Trigger ANY_FILE callbacks with collected changes
         for watcher_index, changes in any_file_changes.items():
-            watcher = self.watchers[watcher_index]
-            if watcher.trigger_type == TriggerType.ANY_FILE and changes and watcher_index not in triggered_any_file:
+            if changes and watcher_index not in triggered_any_file:
+                watcher = self.watchers[watcher_index]
                 watcher.dispatch_callback(changes if watcher.callback_extra else [])
                 triggered_any_file.add(watcher_index)
 

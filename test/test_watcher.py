@@ -62,9 +62,9 @@ class TestWatcher(unittest.TestCase):
         # Initial check (should detect all .txt files as added)
         watcher.check()
         expected = [
-            (str(self.test_dir / "aaa.txt"), "added"),
-            (str(self.test_dir / "bbb.txt"), "added"),
-            (str(self.test_dir / "ccc.txt"), "added"),
+            ((self.test_dir / "aaa.txt").as_posix(), "added"),
+            ((self.test_dir / "bbb.txt").as_posix(), "added"),
+            ((self.test_dir / "ccc.txt").as_posix(), "added"),
         ]
         self.assertEqual(sorted(self.callback_results), sorted(expected))
         self.assertGreater(watcher.last_run_time, 0.0)
@@ -80,8 +80,8 @@ class TestWatcher(unittest.TestCase):
         # Check for modifications
         watcher.check()
         expected = [
-            (str(self.test_dir / "aaa.txt"), "modified"),
-            (str(self.test_dir / "bbb.txt"), "modified"),
+            ((self.test_dir / "aaa.txt").as_posix(), "modified"),
+            ((self.test_dir / "bbb.txt").as_posix(), "modified"),
         ]
         self.assertEqual(sorted(self.callback_results), sorted(expected))
         self.assertGreater(watcher.last_run_time, 0.0)
@@ -90,7 +90,7 @@ class TestWatcher(unittest.TestCase):
         # Delete one file
         os.remove(self.test_dir / "ccc.txt")
         watcher.check()
-        expected = [(str(self.test_dir / "ccc.txt"), "deleted")]
+        expected = [((self.test_dir / "ccc.txt").as_posix(), "deleted")]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
 
@@ -142,7 +142,7 @@ class TestWatcher(unittest.TestCase):
 
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
-        expected = [tuple([(str(self.test_dir / f), "added") for f in self.files])]
+        expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files])]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
@@ -157,8 +157,8 @@ class TestWatcher(unittest.TestCase):
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
         expected = [tuple([
-            (str(self.test_dir / "aaa.txt"), "modified"),
-            (str(self.test_dir / "bbb.txt"), "modified")
+            ((self.test_dir / "aaa.txt").as_posix(), "modified"),
+            ((self.test_dir / "bbb.txt").as_posix(), "modified")
         ])]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
@@ -167,7 +167,7 @@ class TestWatcher(unittest.TestCase):
         # Delete one file
         os.remove(self.test_dir / "ccc.txt")
         watcher.check()
-        expected = [tuple([(str(self.test_dir / "ccc.txt"), "deleted")])]
+        expected = [tuple([((self.test_dir / "ccc.txt").as_posix(), "deleted")])]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
 
@@ -217,9 +217,9 @@ class TestWatcher(unittest.TestCase):
         # Initial check (should detect all .styl files as added)
         watcher.check()
         expected = [
-            (str(self.test_dir / "skin.styl"), "added"),
-            (str(self.test_dir / "styl/default.styl"), "added"),
-            (str(self.test_dir / "styl/utils.styl"), "added"),
+            ((self.test_dir / "skin.styl").as_posix(), "added"),
+            ((self.test_dir / "styl/default.styl").as_posix(), "added"),
+            ((self.test_dir / "styl/utils.styl").as_posix(), "added"),
         ]
         self.assertEqual(sorted(self.callback_results), sorted(expected))
         self.assertGreater(watcher.last_run_time, 0.0)
@@ -235,8 +235,8 @@ class TestWatcher(unittest.TestCase):
         # Check for modifications
         watcher.check()
         expected = [
-            (str(self.test_dir / "skin.styl"), "modified"),
-            (str(self.test_dir / "styl/default.styl"), "modified"),
+            ((self.test_dir / "skin.styl").as_posix(), "modified"),
+            ((self.test_dir / "styl/default.styl").as_posix(), "modified"),
         ]
         self.assertEqual(sorted(self.callback_results), sorted(expected))
         self.assertGreater(watcher.last_run_time, 0.0)
@@ -245,7 +245,7 @@ class TestWatcher(unittest.TestCase):
         # Delete one file
         os.remove(self.test_dir / "styl/utils.styl")
         watcher.check()
-        expected = [(str(self.test_dir / "styl/utils.styl"), "deleted")]
+        expected = [((self.test_dir / "styl/utils.styl").as_posix(), "deleted")]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
 
@@ -297,7 +297,7 @@ class TestWatcher(unittest.TestCase):
 
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
-        expected = [tuple([(str(self.test_dir / f), "added") for f in self.files_style])]
+        expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files_style])]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
@@ -312,8 +312,8 @@ class TestWatcher(unittest.TestCase):
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
         expected = [tuple([
-            (str(self.test_dir / "skin.styl"), "modified"),
-            (str(self.test_dir / "styl/default.styl"), "modified")
+            ((self.test_dir / "skin.styl").as_posix(), "modified"),
+            ((self.test_dir / "styl/default.styl").as_posix(), "modified")
         ])]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
@@ -322,7 +322,7 @@ class TestWatcher(unittest.TestCase):
         # Delete one file
         os.remove(self.test_dir / "styl/utils.styl")
         watcher.check()
-        expected = [tuple([(str(self.test_dir / "styl/utils.styl"), "deleted")])]
+        expected = [tuple([((self.test_dir / "styl/utils.styl").as_posix(), "deleted")])]
         self.assertEqual(self.callback_results, expected)
         self.assertGreater(watcher.last_run_time, 0.0)
 

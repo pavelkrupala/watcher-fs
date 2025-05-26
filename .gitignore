@@ -2,3 +2,6 @@
 /test_dir/
 /docs/build/
 /dist/
+/.pypirc
+*.egg-info/
+/build/

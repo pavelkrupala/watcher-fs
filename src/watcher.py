@@ -6,18 +6,46 @@ from enum import Enum
 import time
 
 class TriggerType(Enum):
+    """Enumeration defining the types of file change triggers for Watcher."""
     PER_FILE = "per_file"  # Trigger callback for each changed file
     ANY_FILE = "any_file"  # Trigger callback once if any file changes
 
 class FileWatcher:
-    def __init__(self, path: Union[str, List[Union[str, Path]]], callback: Callable[..., None], trigger_type: TriggerType, callback_extra: bool = False):
+    """Manages watching a specific file path or pattern for changes.
+
+        Attributes:
+            path: A string (glob pattern) or list of paths to watch.
+            callback: Function to call when changes are detected.
+            trigger_type: Type of trigger (PER_FILE or ANY_FILE).
+            callback_extra: If True, callback receives path and change type.
+        """
+
+    def __init__(
+        self,
+        path: Union[str, List[Union[str, Path]]],
+        callback: Callable,
+        trigger_type: TriggerType = TriggerType.PER_FILE,
+        callback_extra: bool = False
+    ):
+        """Initialize a FileWatcher instance.
+
+        Args:
+            path: Glob pattern (str) or list of file paths to monitor.
+            callback: Function to execute on file changes.
+            trigger_type: TriggerType enum specifying callback behavior.
+            callback_extra: If True, pass (path, change_type) to callback.
+        """
         self.path = path
         self.callback = callback
         self.trigger_type = trigger_type
         self.callback_extra = callback_extra
 
     def dispatch_callback(self, change: Tuple[str, str] | List[Tuple[str, str]]):
-        """Dispatch the callback based on callback_extra setting."""
+        """Execute the callback with the provided argument.
+
+        Args:
+            arg: Single (path, change_type) tuple or list of such tuples.
+        """
         if self.callback_extra:
             # For callback_extra=True, pass the change(s) as parameter(s)
             self.callback(change)
@@ -26,21 +54,49 @@ class FileWatcher:
             self.callback()
 
 class Watcher:
+    """Monitors file system changes and dispatches callbacks for registered paths.
+
+        Attributes:
+            watchers: List of FileWatcher instances tracking paths or patterns.
+            tracked_files: Dict mapping file paths to their last modification times.
+            file_to_watchers: Dict mapping file paths to indices of associated watchers.
+            last_run_time: Timestamp of the last check() call.
+        """
+
     def __init__(self):
+        """Initialize a Watcher instance with empty tracking structures."""
         self.watchers: List[FileWatcher] = []  # List of registered watchers
         self.tracked_files: Dict[str, float] = {}  # Maps files to last modification time
         self.file_to_watchers: Dict[str, Set[int]] = {}  # Maps files to watcher indices
         self.last_run_time: float = 0.0  # Time taken for last check
 
-    def register(self, paths: Union[str, List[Union[str, Path]]], callback: Callable[..., None], trigger_type: TriggerType = TriggerType.PER_FILE, callback_extra: bool = False):
-        """Register a file pattern to watch with a callback and trigger type."""
+    def register(
+        self,
+        paths: Union[str, List[Union[str, Path]]],
+        callback: Callable,
+        trigger_type: TriggerType = TriggerType.PER_FILE,
+        callback_extra: bool = False
+    ):
+        """Register a file path or pattern to watch for changes.
+
+        Args:
+            paths: Glob pattern (str) or list of file paths to monitor.
+            callback: Function to call when changes are detected.
+            trigger_type: TriggerType enum (PER_FILE or ANY_FILE).
+            callback_extra: If True, pass (path, change_type) to callback.
+
+        Notes:
+            - For string paths, uses glob to find matching files.
+            - For lists, only tracks existing files at registration.
+            - Stores initial modification times for tracked files.
+        """
+        # Create a new FileWatcher instance
         watcher = FileWatcher(paths, callback, trigger_type, callback_extra)
         watcher_index = len(self.watchers)
         self.watchers.append(watcher)
 
         if isinstance(paths, str):
             # Pattern-based registration - use glob
-            # Populate initial file list for this pattern
             for file_path in glob.glob(paths, recursive=True):
                 if os.path.isfile(file_path):
                     # Normalize path to use forward slashes
@@ -66,7 +122,12 @@ class Watcher:
                     self.file_to_watchers[file_path].add(watcher_index)
 
     def check(self):
-        """Check for file changes and trigger callbacks."""
+        """Check for file changes and dispatch callbacks as needed.
+
+        Updates tracked_files and file_to_watchers based on current file states.
+        Detects added, modified, and deleted files, triggering callbacks accordingly.
+        Sets last_run_time to the current time.
+        """
         start_time = time.time()
 
         # Collect all current files for all patterns

@@ -8,7 +8,7 @@ from typing import Tuple, List, Union
 
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
-from watcher import Watcher, TriggerType
+from fswatcher.watcher import Watcher, TriggerType
 
 class TestWatcher(unittest.TestCase):
     def setUp(self):

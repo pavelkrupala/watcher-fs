@@ -2,3 +2,5 @@ pytest>=8.3.5
 pytest-sugar>=1.0.0
 Sphinx==8.2.3
 sphinx-rtd-theme==3.0.2
+twine==6.1.0
+build==1.2.2

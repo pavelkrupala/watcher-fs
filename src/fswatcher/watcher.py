@@ -67,7 +67,7 @@ class Watcher:
         """Initialize a Watcher instance with empty tracking structures."""
         self.watchers: List[FileWatcher] = []  # List of registered watchers
         self.tracked_files: Dict[str, float] = {}  # Maps files to last modification time
-        self.file_to_watchers: Dict[str, Set[int]] = {}  # Maps files to watcher indices
+        self.file_to_watchers: Dict[str, Set[int]] = {}  # Maps files to fswatcher indices
         self.last_run_time: float = 0.0  # Time taken for last check
 
     def register(

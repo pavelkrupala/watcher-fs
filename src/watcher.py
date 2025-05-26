@@ -1,7 +1,7 @@
 import glob
 import os
 from pathlib import Path
-from typing import Callable, List, Dict, Set, Tuple
+from typing import Callable, List, Dict, Set, Tuple, Union
 from enum import Enum
 import time
 
@@ -10,7 +10,7 @@ class TriggerType(Enum):
     ANY_FILE = "any_file"  # Trigger callback once if any file changes
 
 class FileWatcher:
-    def __init__(self, path: str, callback: Callable[..., None], trigger_type: TriggerType, callback_extra: bool = False):
+    def __init__(self, path: Union[str, List[Union[str, Path]]], callback: Callable[..., None], trigger_type: TriggerType, callback_extra: bool = False):
         self.path = path
         self.callback = callback
         self.trigger_type = trigger_type
@@ -32,24 +32,38 @@ class Watcher:
         self.file_to_watchers: Dict[str, Set[int]] = {}  # Maps files to watcher indices
         self.last_run_time: float = 0.0  # Time taken for last check
 
-    def register(self, pattern: str, callback: Callable[..., None], trigger_type: TriggerType = TriggerType.PER_FILE, callback_extra: bool = False):
+    def register(self, paths: Union[str, List[Union[str, Path]]], callback: Callable[..., None], trigger_type: TriggerType = TriggerType.PER_FILE, callback_extra: bool = False):
         """Register a file pattern to watch with a callback and trigger type."""
-        watcher = FileWatcher(pattern, callback, trigger_type, callback_extra)
+        watcher = FileWatcher(paths, callback, trigger_type, callback_extra)
         watcher_index = len(self.watchers)
         self.watchers.append(watcher)
 
-        # Populate initial file list for this pattern
-        for file_path in glob.glob(pattern, recursive=True):
-            if os.path.isfile(file_path):
-                # Normalize path to use forward slashes
-                file_path = str(Path(file_path).as_posix())
-                if file_path not in self.tracked_files:
-                    try:
-                        self.tracked_files[file_path] = os.path.getmtime(file_path)
-                        self.file_to_watchers[file_path] = set()
-                    except OSError:
-                        continue  # Skip inaccessible files
-                self.file_to_watchers[file_path].add(watcher_index)
+        if isinstance(paths, str):
+            # Pattern-based registration - use glob
+            # Populate initial file list for this pattern
+            for file_path in glob.glob(paths, recursive=True):
+                if os.path.isfile(file_path):
+                    # Normalize path to use forward slashes
+                    file_path = str(Path(file_path).as_posix())
+                    if file_path not in self.tracked_files:
+                        try:
+                            self.tracked_files[file_path] = os.path.getmtime(file_path)
+                            self.file_to_watchers[file_path] = set()
+                        except OSError:
+                            continue  # Skip inaccessible files
+                    self.file_to_watchers[file_path].add(watcher_index)
+        else:
+            # List-based registration
+            for path in paths:
+                file_path = Path(path).as_posix()
+                if os.path.isfile(file_path):
+                    if file_path not in self.tracked_files:
+                        try:
+                            self.tracked_files[file_path] = os.path.getmtime(file_path)
+                            self.file_to_watchers[file_path] = set()
+                        except OSError:
+                            continue    # Skip inaccessible files
+                    self.file_to_watchers[file_path].add(watcher_index)
 
     def check(self):
         """Check for file changes and trigger callbacks."""
@@ -58,11 +72,19 @@ class Watcher:
         # Collect all current files for all patterns
         current_files: Dict[str, Set[int]] = {}
         for watcher_index, watcher in enumerate(self.watchers):
-            for file_path in glob.glob(watcher.path, recursive=True):
-                if os.path.isfile(file_path):
-                    # Normalize path to use forward slashes
-                    file_path = str(Path(file_path).as_posix())
-                    current_files.setdefault(file_path, set()).add(watcher_index)
+            if isinstance(watcher.path, str):
+                # Pattern-based: use glob
+                for file_path in glob.glob(watcher.path, recursive=True):
+                    if os.path.isfile(file_path):
+                        # Normalize path to use forward slashes
+                        file_path = str(Path(file_path).as_posix())
+                        current_files.setdefault(file_path, set()).add(watcher_index)
+            else:
+                # List-base: iterate over paths
+                for path in watcher.path:
+                    file_path = str(Path(path).as_posix())
+                    if os.path.isfile(file_path):
+                        current_files.setdefault(file_path, set()).add(watcher_index)
 
         # Track which ANY_FILE watchers have been triggered
         triggered_any_file: Set[int] = set()
@@ -145,7 +167,9 @@ if __name__ == "__main__":
 
     watcher = Watcher()
     watcher.register("test_dir/**/*.txt", on_change_simple, TriggerType.PER_FILE)
-    watcher.register("test_dir/**/*.styl", on_change, TriggerType.ANY_FILE, callback_extra=True)
+    # watcher.register("test_dir/**/*.styl", on_change, TriggerType.ANY_FILE, callback_extra=True)
+    watcher.register([test_dir / "skin.styl", test_dir / "styl/default.styl", test_dir / "styl/utils.styl"], on_change, TriggerType.ANY_FILE, callback_extra=True)
+
 
     # Simulate a check
     watcher.check()

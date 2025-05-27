@@ -6,6 +6,10 @@
 Watcher-FS documentation
 ========================
 
+**Watcher-FS** is a Python package for monitoring file system changes.
+
+**Version**: |version|
+
 
 .. toctree::
    :maxdepth: 2

@@ -19,7 +19,7 @@ Example
 .. code-block:: python
 
    from watcher_fs.watcher import Watcher, TriggerType
-
+   from pathlib import Path
 
    test_dir = Path("test_dir")
 
@@ -45,8 +45,12 @@ Example
    create_test_files(["skin.styl", "styl/default.styl", "styl/utils.styl"])
 
    watcher = Watcher()
+
+   # register as glob pattern
    watcher.register("test_dir/**/*.txt", on_change_simple, TriggerType.PER_FILE)
-   # watcher.register("test_dir/**/*.styl", on_change, TriggerType.ANY_FILE, callback_extra=True)
+   watcher.register("test_dir/**/*.py", on_change, TriggerType.ANY_FILE, callback_extra=True)
+
+   # register as list of specified files
    watcher.register([
       test_dir / "skin.styl",
       test_dir / "styl/default.styl",

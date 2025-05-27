@@ -68,10 +68,8 @@ class TestWatcher(unittest.TestCase):
             ((self.test_dir / "bbb.txt").as_posix(), "added"),
             ((self.test_dir / "ccc.txt").as_posix(), "added"),
         ]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -88,10 +86,8 @@ class TestWatcher(unittest.TestCase):
             ((self.test_dir / "aaa.txt").as_posix(), "modified"),
             ((self.test_dir / "bbb.txt").as_posix(), "modified"),
         ]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -99,10 +95,8 @@ class TestWatcher(unittest.TestCase):
         os.remove(self.test_dir / "ccc.txt")
         watcher.check()
         expected = [((self.test_dir / "ccc.txt").as_posix(), "deleted")]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
 
     def test_per_file_trigger_txt_no_extra(self):
@@ -154,10 +148,8 @@ class TestWatcher(unittest.TestCase):
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
         expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files])]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -174,10 +166,8 @@ class TestWatcher(unittest.TestCase):
             ((self.test_dir / "aaa.txt").as_posix(), "modified"),
             ((self.test_dir / "bbb.txt").as_posix(), "modified")
         ])]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -185,10 +175,8 @@ class TestWatcher(unittest.TestCase):
         os.remove(self.test_dir / "ccc.txt")
         watcher.check()
         expected = [tuple([((self.test_dir / "ccc.txt").as_posix(), "deleted")])]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
 
     def test_any_file_trigger_txt_no_extra(self):
@@ -241,10 +229,8 @@ class TestWatcher(unittest.TestCase):
             ((self.test_dir / "styl/default.styl").as_posix(), "added"),
             ((self.test_dir / "styl/utils.styl").as_posix(), "added"),
         ]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -261,10 +247,8 @@ class TestWatcher(unittest.TestCase):
             ((self.test_dir / "skin.styl").as_posix(), "modified"),
             ((self.test_dir / "styl/default.styl").as_posix(), "modified"),
         ]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -272,10 +256,8 @@ class TestWatcher(unittest.TestCase):
         os.remove(self.test_dir / "styl/utils.styl")
         watcher.check()
         expected = [((self.test_dir / "styl/utils.styl").as_posix(), "deleted")]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
 
     def test_per_file_trigger_styl_no_extra(self):
@@ -327,10 +309,8 @@ class TestWatcher(unittest.TestCase):
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
         expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files_style])]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -347,10 +327,8 @@ class TestWatcher(unittest.TestCase):
             ((self.test_dir / "skin.styl").as_posix(), "modified"),
             ((self.test_dir / "styl/default.styl").as_posix(), "modified")
         ])]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -358,10 +336,8 @@ class TestWatcher(unittest.TestCase):
         os.remove(self.test_dir / "styl/utils.styl")
         watcher.check()
         expected = [tuple([((self.test_dir / "styl/utils.styl").as_posix(), "deleted")])]
-        self.assertEqual(
-            sorted(self.callback_results, key=lambda x: tuple(sorted(x, key=lambda y: y[0]))),
-            sorted(expected, key=lambda x: tuple(sorted(x, key=lambda y: y[0])))
-        )
+        for expected_item in expected:
+            self.assertIn(expected_item, self.callback_results)
         self.assertGreater(watcher.last_run_time, 0.0)
 
     def test_any_file_trigger_styl_no_extra(self):

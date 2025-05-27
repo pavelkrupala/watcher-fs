@@ -43,8 +43,6 @@ class TestWatcherList(unittest.TestCase):
         """Callback for callback_extra=True."""
         # Convert list to tuple for consistency in assertions
         time.sleep(0.05)
-        if isinstance(arg, list):
-            arg = tuple(arg)
         self.callback_results.append(arg)
 
     def callback_no_extra(self):
@@ -152,9 +150,9 @@ class TestWatcherList(unittest.TestCase):
 
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
-        expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files])]
+        expected = [((self.test_dir / f).as_posix(), "added") for f in self.files]
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -167,21 +165,21 @@ class TestWatcherList(unittest.TestCase):
 
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
-        expected = [tuple([
+        expected = [
             ((self.test_dir / "aaa.txt").as_posix(), "modified"),
             ((self.test_dir / "bbb.txt").as_posix(), "modified")
-        ])]
+        ]
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
         # Delete one file
         os.remove(self.test_dir / "ccc.txt")
         watcher.check()
-        expected = [tuple([((self.test_dir / "ccc.txt").as_posix(), "deleted")])]
+        expected = [((self.test_dir / "ccc.txt").as_posix(), "deleted")]
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
 
     def test_any_file_trigger_txt_no_extra(self):

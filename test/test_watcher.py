@@ -43,8 +43,6 @@ class TestWatcher(unittest.TestCase):
         """Callback for callback_extra=True."""
         # Convert list to tuple for consistency in assertions
         time.sleep(0.05)
-        if isinstance(arg, list):
-            arg = tuple(arg)
         self.callback_results.append(arg)
 
     def callback_no_extra(self):
@@ -147,9 +145,10 @@ class TestWatcher(unittest.TestCase):
 
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
-        expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files])]
+        expected = [((self.test_dir / f).as_posix(), "added") for f in sorted(self.files)]
+        self.assertEqual(len(self.callback_results), 1)
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -162,21 +161,23 @@ class TestWatcher(unittest.TestCase):
 
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
-        expected = [tuple([
+        expected = [
             ((self.test_dir / "aaa.txt").as_posix(), "modified"),
             ((self.test_dir / "bbb.txt").as_posix(), "modified")
-        ])]
+        ]
+        self.assertEqual(len(self.callback_results), 1)
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
         # Delete one file
         os.remove(self.test_dir / "ccc.txt")
         watcher.check()
-        expected = [tuple([((self.test_dir / "ccc.txt").as_posix(), "deleted")])]
+        expected = [((self.test_dir / "ccc.txt").as_posix(), "deleted")]
+        self.assertEqual(len(self.callback_results), 1)
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
 
     def test_any_file_trigger_txt_no_extra(self):
@@ -308,9 +309,10 @@ class TestWatcher(unittest.TestCase):
 
         # Initial check (should trigger once with tuple of all added files)
         watcher.check()
-        expected = [tuple([((self.test_dir / f).as_posix(), "added") for f in self.files_style])]
+        expected = [((self.test_dir / f).as_posix(), "added") for f in self.files_style]
+        self.assertEqual(len(self.callback_results), 1)
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
@@ -323,22 +325,24 @@ class TestWatcher(unittest.TestCase):
 
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
-        expected = [tuple([
+        expected = [
             ((self.test_dir / "skin.styl").as_posix(), "modified"),
             ((self.test_dir / "styl/default.styl").as_posix(), "modified")
-        ])]
+        ]
+        self.assertEqual(len(self.callback_results), 1)
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
         self.callback_results.clear()
 
         # Delete one file
         os.remove(self.test_dir / "styl/utils.styl")
         watcher.check()
-        expected = [tuple([((self.test_dir / "styl/utils.styl").as_posix(), "deleted")])]
+        expected = [((self.test_dir / "styl/utils.styl").as_posix(), "deleted")]
         for expected_item in expected:
-            self.assertIn(expected_item, self.callback_results)
+            self.assertIn(expected_item, self.callback_results[0])
         self.assertGreater(watcher.last_run_time, 0.0)
+        self.callback_results.clear()
 
     def test_any_file_trigger_styl_no_extra(self):
         """Test TriggerType.ANY_FILE with callback_extra=False for .styl files."""

@@ -198,7 +198,8 @@ class Watcher:
         for watcher_index, changes in any_file_changes.items():
             if changes and watcher_index not in triggered_any_file:
                 watcher = self.watchers[watcher_index]
-                watcher.dispatch_callback(changes if watcher.callback_extra else [])
+                # Explicitly pass a list for ANY_FILE, empty list for no callback_extra
+                watcher.dispatch_callback(sorted(changes, key=lambda x: x[0]) if watcher.callback_extra else [])
                 triggered_any_file.add(watcher_index)
 
         # Record runtime

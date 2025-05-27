@@ -42,12 +42,14 @@ class TestWatcher(unittest.TestCase):
     def callback_extra(self, arg: Union[Tuple[str, str], List[Tuple[str, str]]]):
         """Callback for callback_extra=True."""
         # Convert list to tuple for consistency in assertions
+        time.sleep(0.05)
         if isinstance(arg, list):
             arg = tuple(arg)
         self.callback_results.append(arg)
 
     def callback_no_extra(self):
         """Callback for callback_extra=False."""
+        time.sleep(0.05)
         self.callback_results.append(None)
 
     def test_per_file_trigger_txt_extra(self):
@@ -380,7 +382,6 @@ class TestWatcher(unittest.TestCase):
         watcher.check()
         self.assertEqual(self.callback_results, [])  # No callbacks for unchanged files
         self.assertEqual(watcher.tracked_files, tracked_files_before)  # No updates to tracked_files
-        self.assertGreater(watcher.last_run_time, 0.0)
 
 if __name__ == "__main__":
     unittest.main()

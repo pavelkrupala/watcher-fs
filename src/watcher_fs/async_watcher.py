@@ -4,109 +4,108 @@ from pathlib import Path
 from typing import Callable, List, Dict, Set, Tuple, Union
 from enum import Enum
 import time
+import asyncio
+
 
 class TriggerType(Enum):
     """Enumeration defining the types of file change triggers for Watcher."""
     PER_FILE = "per_file"  # Trigger callback for each changed file
     ANY_FILE = "any_file"  # Trigger callback once if any file changes
 
-class FileWatcher:
-    """Manages watching a specific file path or pattern for changes.
 
-        Attributes:
-            path: A string (glob pattern) or list of paths to watch.
-            callback: Function to call when changes are detected.
-            trigger_type: Type of trigger (PER_FILE or ANY_FILE).
-            callback_extra: If True, callback receives path and change type.
-        """
+class AsyncFileWatcher:
+    """Manages watching a specific file path or pattern for changes (async version).
+
+    Attributes:
+        path: A string (glob pattern) or list of paths to watch.
+        callback: Async or sync function to call when changes are detected.
+        trigger_type: Type of trigger (PER_FILE or ANY_FILE).
+        callback_extra: If True, callback receives path and change type.
+    """
 
     def __init__(
-        self,
-        path: Union[str, List[Union[str, Path]]],
-        callback: Callable,
-        trigger_type: TriggerType = TriggerType.PER_FILE,
-        callback_extra: bool = False
+            self,
+            path: Union[str, List[Union[str, Path]]],
+            callback: Callable,  # CHANGED: Can be async or sync callable
+            trigger_type: TriggerType = TriggerType.PER_FILE,
+            callback_extra: bool = False
     ):
-        """Initialize a FileWatcher instance.
-
-        Args:
-            path: Glob pattern (str) or list of file paths to monitor.
-            callback: Function to execute on file changes.
-            trigger_type: TriggerType enum specifying callback behavior.
-            callback_extra: If True, pass (path, change_type) to callback.
-        """
+        """Initialize an AsyncFileWatcher instance."""
         self.path = path
         self.callback = callback
         self.trigger_type = trigger_type
         self.callback_extra = callback_extra
 
-    def dispatch_callback(self, change: Tuple[str, str] | List[Tuple[str, str]]):
-        """Execute the callback with the provided argument.
+    async def dispatch_callback(self, change: Tuple[str, str] | List[Tuple[str, str]]):
+        """Execute the callback with the provided argument (async).
 
         Args:
             arg: Single (path, change_type) tuple or list of such tuples.
         """
         if self.callback_extra:
-            # For callback_extra=True, pass the change(s) as parameter(s)
-            self.callback(change)
+            if asyncio.iscoroutinefunction(self.callback):
+                await self.callback(change)
+            else:
+                self.callback(change)
         else:
-            # For callback_extra=False, call callback without parameters
-            self.callback()
+            if asyncio.iscoroutinefunction(self.callback):
+                await self.callback()
+            else:
+                self.callback()
 
-class Watcher:
-    """Monitors file system changes and dispatches callbacks for registered paths.
 
-        Attributes:
-            watchers: List of FileWatcher instances tracking paths or patterns.
-            tracked_files: Dict mapping file paths to their last modification times.
-            file_to_watchers: Dict mapping file paths to indices of associated watchers.
-            last_run_time: Timestamp of the last check() call.
-        """
+class AsyncWatcher:
+    """Monitors file system changes and dispatches callbacks asynchronously.
+
+    Attributes:
+        watchers: List of AsyncFileWatcher instances tracking paths or patterns.
+        tracked_files: Dict mapping file paths to their last modification times.
+        file_to_watchers: Dict mapping file paths to indices of associated watchers.
+        last_run_time: Timestamp of the last check() call.
+    """
 
     def __init__(self):
-        """Initialize a Watcher instance with empty tracking structures."""
-        self.watchers: List[FileWatcher] = []  # List of registered watchers
-        self.tracked_files: Dict[str, float] = {}  # Maps files to last modification time
-        self.file_to_watchers: Dict[str, Set[int]] = {}  # Maps files to fswatcher indices
-        self.last_run_time: float = 0.0  # Time taken for last check
+        """Initialize an AsyncWatcher instance with empty tracking structures."""
+        self.watchers: List[AsyncFileWatcher] = []
+        self.tracked_files: Dict[str, float] = {}
+        self.file_to_watchers: Dict[str, Set[int]] = {}
+        self.last_run_time: float = 0.0
 
-    def register(
-        self,
-        paths: Union[str, List[Union[str, Path]]],
-        callback: Callable,
-        trigger_type: TriggerType = TriggerType.PER_FILE,
-        callback_extra: bool = False
+    async def register(
+            self,
+            paths: Union[str, List[Union[str, Path]]],
+            callback: Callable,
+            trigger_type: TriggerType = TriggerType.PER_FILE,
+            callback_extra: bool = False
     ):
-        """Register a file path or pattern to watch for changes.
+        """Register a file path or pattern to watch for changes (async).
 
         Args:
             paths: Glob pattern (str) or list of file paths to monitor.
-            callback: Function to call when changes are detected.
+            callback: Async function to call when changes are detected.
             trigger_type: TriggerType enum (PER_FILE or ANY_FILE).
             callback_extra: If True, pass (path, change_type) to callback.
-
-        Notes:
-            - For string paths, uses glob to find matching files.
-            - For lists, only tracks existing files at registration.
-            - Stores initial modification times for tracked files.
         """
-        # Create a new FileWatcher instance
-        watcher = FileWatcher(paths, callback, trigger_type, callback_extra)
+        # Create a new AsyncFileWatcher instance
+        watcher = AsyncFileWatcher(paths, callback, trigger_type, callback_extra)
         watcher_index = len(self.watchers)
         self.watchers.append(watcher)
 
         if isinstance(paths, str):
-            # Pattern-based registration - use glob
-            for file_path in glob.glob(paths, recursive=True):
-                if os.path.isfile(file_path):
-                    # Normalize path to use forward slashes
+            # Pattern-based registration - use glob in thread
+            # Run glob in thread to avoid blocking
+            files = await asyncio.to_thread(glob.glob, paths, recursive=True)
+            for file_path in files:
+                if os.path.isfile(file_path):  # Still synchronous check, but minimal
                     file_path = str(Path(file_path).as_posix())
                     if file_path not in self.tracked_files:
                         try:
-                            self.tracked_files[file_path] = os.path.getmtime(file_path)
+                            # Run getmtime in thread
+                            mtime = await asyncio.to_thread(os.path.getmtime, file_path)
+                            self.tracked_files[file_path] = mtime
                             self.file_to_watchers[file_path] = set()
                         except OSError:
-                            continue  # Skip inaccessible files
+                            continue
                     self.file_to_watchers[file_path].add(watcher_index)
         else:
             # List-based registration
@@ -115,14 +114,16 @@ class Watcher:
                 if os.path.isfile(file_path):
                     if file_path not in self.tracked_files:
                         try:
-                            self.tracked_files[file_path] = os.path.getmtime(file_path)
+                            # Run getmtime in thread
+                            mtime = await asyncio.to_thread(os.path.getmtime, file_path)
+                            self.tracked_files[file_path] = mtime
                             self.file_to_watchers[file_path] = set()
                         except OSError:
-                            continue    # Skip inaccessible files
+                            continue
                     self.file_to_watchers[file_path].add(watcher_index)
 
-    def check(self):
-        """Check for file changes and dispatch callbacks as needed.
+    async def check(self):
+        """Check for file changes and dispatch callbacks asynchronously.
 
         Updates tracked_files and file_to_watchers based on current file states.
         Detects added, modified, and deleted files, triggering callbacks accordingly.
@@ -134,14 +135,13 @@ class Watcher:
         current_files: Dict[str, Set[int]] = {}
         for watcher_index, watcher in enumerate(self.watchers):
             if isinstance(watcher.path, str):
-                # Pattern-based: use glob
-                for file_path in glob.glob(watcher.path, recursive=True):
+                # Run glob in thread
+                files = await asyncio.to_thread(glob.glob, watcher.path, recursive=True)
+                for file_path in files:
                     if os.path.isfile(file_path):
-                        # Normalize path to use forward slashes
                         file_path = str(Path(file_path).as_posix())
                         current_files.setdefault(file_path, set()).add(watcher_index)
             else:
-                # List-base: iterate over paths
                 for path in watcher.path:
                     file_path = str(Path(path).as_posix())
                     if os.path.isfile(file_path):
@@ -158,19 +158,19 @@ class Watcher:
                 for watcher_index in watcher_indices:
                     watcher = self.watchers[watcher_index]
                     if watcher.trigger_type == TriggerType.PER_FILE:
-                        watcher.dispatch_callback((file_path, "deleted"))
+                        await watcher.dispatch_callback((file_path, "deleted"))  # Await dispatch
                     elif watcher.trigger_type == TriggerType.ANY_FILE:
                         any_file_changes[watcher_index].append((file_path, "deleted"))
-                # Clean up after callbacks
                 self.tracked_files.pop(file_path, None)
                 self.file_to_watchers.pop(file_path, None)
 
         # Detect additions and modifications
         for file_path, watcher_indices in current_files.items():
             try:
-                current_mtime = os.path.getmtime(file_path)
+                # Run getmtime in thread
+                current_mtime = await asyncio.to_thread(os.path.getmtime, file_path)
             except OSError:
-                continue  # Skip inaccessible files
+                continue
             if file_path not in self.tracked_files:
                 # New file detected
                 self.tracked_files[file_path] = current_mtime
@@ -178,7 +178,7 @@ class Watcher:
                 for watcher_index in watcher_indices:
                     watcher = self.watchers[watcher_index]
                     if watcher.trigger_type == TriggerType.PER_FILE:
-                        watcher.dispatch_callback((file_path, "added"))
+                        await watcher.dispatch_callback((file_path, "added"))  # CHANGED: Await dispatch
                     elif watcher.trigger_type == TriggerType.ANY_FILE:
                         any_file_changes[watcher_index].append((file_path, "added"))
             else:
@@ -190,7 +190,7 @@ class Watcher:
                     for watcher_index in watcher_indices:
                         watcher = self.watchers[watcher_index]
                         if watcher.trigger_type == TriggerType.PER_FILE:
-                            watcher.dispatch_callback((file_path, "modified"))
+                            await watcher.dispatch_callback((file_path, "modified"))  # CHANGED: Await dispatch
                         elif watcher.trigger_type == TriggerType.ANY_FILE:
                             any_file_changes[watcher_index].append((file_path, "modified"))
 
@@ -198,23 +198,26 @@ class Watcher:
         for watcher_index, changes in any_file_changes.items():
             if changes and watcher_index not in triggered_any_file:
                 watcher = self.watchers[watcher_index]
-                # Explicitly pass a list for ANY_FILE, empty list for no callback_extra
-                watcher.dispatch_callback(changes if watcher.callback_extra else [])
+                # Await dispatch for ANY_FILE
+                await watcher.dispatch_callback(changes if watcher.callback_extra else [])
                 triggered_any_file.add(watcher_index)
 
         # Record runtime
         self.last_run_time = time.time() - start_time
 
+
 # Example usage:
-if __name__ == "__main__":
+async def main():
     test_dir = Path("test_dir")
-    def on_change_simple():
+
+    async def on_change_simple():  # CHANGED: Async callback
         print(f"Something changed.")
-    def on_change(change):
+
+    async def on_change(change):  # CHANGED: Async callback
         print(f"File {change}")
 
     def create_test_files(file_names):
-        """Helper to create test files."""
+        """Helper to create test files (synchronous for simplicity)."""
         for file_name in file_names:
             file_path = test_dir / file_name
             file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -227,25 +230,29 @@ if __name__ == "__main__":
     create_test_files(["aaa.txt", "bbb.txt", "ccc.txt"])
     create_test_files(["skin.styl", "styl/default.styl", "styl/utils.styl"])
 
-    watcher = Watcher()
-    watcher.register("test_dir/**/*.txt", on_change_simple, TriggerType.PER_FILE)
-    # watcher.register("test_dir/**/*.styl", on_change, TriggerType.ANY_FILE, callback_extra=True)
-    watcher.register([test_dir / "skin.styl", test_dir / "styl/default.styl", test_dir / "styl/utils.styl"], on_change, TriggerType.ANY_FILE, callback_extra=True)
-
+    watcher = AsyncWatcher()
+    await watcher.register("test_dir/**/*.txt", on_change_simple, TriggerType.PER_FILE)
+    await watcher.register(
+        [test_dir / "skin.styl", test_dir / "styl/default.styl", test_dir / "styl/utils.styl"],
+        on_change, TriggerType.ANY_FILE, callback_extra=True
+    )
 
     # Simulate a check
-    watcher.check()
+    await watcher.check()
 
-    # do something
+    # Modify files (synchronous for simplicity)
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
     with open(test_dir / "bbb.txt", "w") as f:
         f.write("Modified content")
-
     with open(test_dir / "skin.styl", "w") as f:
         f.write("a = #0af")
     with open(test_dir / "styl/default.styl", "w") as f:
         f.write("a = #f00")
 
-    # check again
-    watcher.check()
+    # Check again
+    await watcher.check()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

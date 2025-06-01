@@ -6,3 +6,4 @@ Sphinx>=8.0
 sphinx-rtd-theme>=3.0.2
 twine==6.1.0
 build==1.2.2
+pytest-asyncio==1.0.0

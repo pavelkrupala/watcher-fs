@@ -27,6 +27,8 @@ def create_test_files(test_dir: Path):
             file_path.parent.mkdir(parents=True, exist_ok=True)
             with open(file_path, "w") as f:
                 f.write("Initial content")
+                f.flush()
+                os.fsync(f.fileno())
     return _create_files
 
 @pytest.mark.asyncio
@@ -53,6 +55,9 @@ async def test_per_file_trigger(test_dir: Path, create_test_files):
     triggered_changes.clear()
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
+        f.flush()
+        os.fsync(f.fileno())
+
     await asyncio.sleep(0.1)
     await watcher.check()
     assert len(triggered_changes) == 1, "Should detect one modified file"
@@ -91,8 +96,12 @@ async def test_any_file_trigger(test_dir: Path, create_test_files):
     triggered_changes.clear()
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
+        f.flush()
+        os.fsync(f.fileno())
     with open(test_dir / "bbb.txt", "w") as f:
         f.write("Modified content")
+        f.flush()
+        os.fsync(f.fileno())
     await asyncio.sleep(0.1)
     await watcher.check()
     assert len(triggered_changes) == 2, "Should detect two modified files in one callback"
@@ -159,6 +168,8 @@ async def test_no_callback_extra(test_dir: Path, create_test_files):
 
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
+        f.flush()
+        os.fsync(f.fileno())
     await asyncio.sleep(0.1)
     await watcher.check()
     assert call_count == 1, "Should call callback once for modified file"
@@ -228,6 +239,8 @@ async def test_last_run_time(test_dir: Path, create_test_files):
     # Modify a file to trigger the callback
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
+        f.flush()
+        os.fsync(f.fileno())
     await asyncio.sleep(0.1)  # Ensure file system updates mtime
     await watcher.check()
     assert watcher.last_run_time >= 0.05, "last_run_time should reflect callback sleep time (0.05s)"

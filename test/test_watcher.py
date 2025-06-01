@@ -36,8 +36,12 @@ class TestWatcher(unittest.TestCase):
             with open(file_path, "w") as f:
                 if file_name.endswith(".txt"):
                     f.write("Initial content")
+                    f.flush()
+                    os.fsync(f.fileno())
                 else:  # .styl
                     f.write("a = #fa0")
+                    f.flush()
+                    os.fsync(f.fileno())
 
     def callback_extra(self, arg: Union[Tuple[str, str], List[Tuple[str, str]]]):
         """Callback for callback_extra=True."""
@@ -75,8 +79,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "aaa.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "bbb.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications
         watcher.check()
@@ -117,8 +125,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "aaa.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "bbb.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications
         watcher.check()
@@ -156,8 +168,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "aaa.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "bbb.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
@@ -199,8 +215,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "aaa.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "bbb.txt", "w") as f:
             f.write("Modified content")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications (should trigger once)
         watcher.check()
@@ -239,8 +259,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "skin.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "styl/default.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications
         watcher.check()
@@ -281,8 +305,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "skin.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "styl/default.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications
         watcher.check()
@@ -320,8 +348,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "skin.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "styl/default.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications (should trigger once with tuple of modified files)
         watcher.check()
@@ -363,8 +395,12 @@ class TestWatcher(unittest.TestCase):
         time.sleep(0.1)  # Ensure modification time changes
         with open(self.test_dir / "skin.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
         with open(self.test_dir / "styl/default.styl", "w") as f:
             f.write("a = #0af")
+            f.flush()
+            os.fsync(f.fileno())
 
         # Check for modifications (should trigger once)
         watcher.check()

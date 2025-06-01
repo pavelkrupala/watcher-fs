@@ -127,7 +127,9 @@ async def test_sync_callback(test_dir: Path, create_test_files):
     triggered_changes.clear()
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
-    await asyncio.sleep(0.1)
+        f.flush()
+        os.fsync(f.fileno())
+    await asyncio.sleep(0.2)
     await watcher.check()
     assert len(triggered_changes) == 1, "Should detect one modified file"
     expected_change = (str(test_dir / "aaa.txt").replace("\\", "/"), "modified")
@@ -185,9 +187,13 @@ async def test_explicit_file_list(test_dir: Path, create_test_files):
     triggered_changes.clear()
     with open(test_dir / "aaa.txt", "w") as f:
         f.write("Modified content")
+        f.flush()
+        os.fsync(f.fileno())
     with open(test_dir / "bbb.txt", "w") as f:
         f.write("Modified content")
-    await asyncio.sleep(0.1)
+        f.flush()
+        os.fsync(f.fileno())
+    await asyncio.sleep(0.2)
     await watcher.check()
     assert len(triggered_changes) == 2, "Should detect two modified files"
     expected_changes = [

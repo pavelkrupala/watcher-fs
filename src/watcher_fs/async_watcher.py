@@ -82,7 +82,7 @@ class AsyncWatcher:
 
         Args:
             paths: Glob pattern (str) or list of file paths to monitor.
-            callback: Async function to call when changes are detected.
+            callback: Async or sync function to call when changes are detected.
             trigger_type: TriggerType enum (PER_FILE or ANY_FILE).
             callback_extra: If True, pass (path, change_type) to callback.
         """

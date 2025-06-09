@@ -42,3 +42,30 @@ make html
 ```
 
 
+### Create cmd line command
+
+modify pyproject.toml:
+```toml
+[project.scripts]
+watcher-fs = "watcher_fs.cli:main"
+```
+
+add new script `cli.py`:
+```python
+def main():
+    print("Hello World!")
+```
+
+### Install package in interactive development mode:
+
+This will install the regular pip package, however it's redirected to the actual code in the repo/dir. 
+So any changes you make are immediatelly live.
+
+```bash
+pip install -e .
+```
+
+Now your cli command works, try:
+```bash
+watcher-fs
+```

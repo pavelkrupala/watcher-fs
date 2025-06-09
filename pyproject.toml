@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "watcher-fs"
-version = "1.1.1"
+version = "1.2"
 description = "A Python package for monitoring file system changes"
 readme = "README.md"
 authors = [{ name = "Pavel Křupala", email = "pavel.krupala@gmail.com" }]
@@ -15,11 +15,14 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["click>=8.1.0"]
 
 [project.urls]
 Homepage = "https://github.com/pavelkrupala/watcher-fs"
 Documentation = "https://pavelkrupala.github.io/watcher-fs"
+
+[project.scripts]
+watcher-fs = "watcher_fs.cli:main"
 
 [tool.setuptools]
 packages = ["watcher_fs"]

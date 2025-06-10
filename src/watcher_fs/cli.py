@@ -10,6 +10,12 @@ from watcher_fs.watcher import Watcher, TriggerType
 
 watcher = Watcher()
 
+# ANSI color codes
+CON_YELLOW = "\033[1;93m"
+CON_RED = "\033[1;91m"
+CON_RESET = "\033[0m"    # Reset to default
+
+
 def load_config(config_path="watcher-fs.cfg"):
     """Load configuration from a JSON file."""
     config_path = Path(config_path).resolve()
@@ -45,20 +51,27 @@ def create_actions_callback(actions_list: List[Union[str, Dict]]) -> callable:
 
     for action in actions_list:
         if isinstance(action, str):
-            action_functions.append(load_action_function(action))
+            action_functions.append((action, action, load_action_function(action)))
         elif isinstance(action, dict) and "action" in action:
             kwargs = {k: v for k, v in action.items() if k != "action"}
-            action_functions.append(load_action_function(action["action"], kwargs))
+            action_functions.append((action["action"], action, load_action_function(action["action"], kwargs)))
         else:
             raise ValueError(f"Invalid action format: {action}. Must be a string or a dict with an 'action' key.")
 
     def actions_callback(changes):
-        """Execute all action functions for the given changes."""
-        for action_func in action_functions:
-            try:
-                action_func(changes)
-            except Exception as e:
-                print(f"Error executing action {action_func}: {e}")
+        """Execute all action functions for the given changes, logging errors after execution."""
+        error_occured = False
+        for action_name, action, action_func in action_functions:
+            if error_occured:
+                print(f"{CON_YELLOW}-- Skipping:{CON_RESET} {json.dumps(action) if type(action)==dict else action_name}")
+            else:
+                try:
+                    action_func(changes)
+                except Exception as e:
+                    error_occured = True
+                    # Log all errors after execution
+                    # print(f"Error executing action {action_name} with {json.dumps(action)}: {error}")
+                    print(f"{CON_RED}Error executing action{CON_RESET} {json.dumps(action)}: {e}")
 
     return actions_callback
 

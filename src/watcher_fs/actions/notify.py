@@ -1,6 +1,12 @@
 from pathlib import Path
 
+# ANSI color codes
+CON_GREEN = "\033[1;32m"
+CON_RESET = "\033[0m"       # Reset to default
+CON_HEAD = f"{CON_GREEN}[notify]{CON_RESET}"
+
 def action(changes):
+    """Process file changes and execute the notify function for each change."""
     if type(changes) == list:
         for change in changes:
             notify(*change)
@@ -10,4 +16,4 @@ def action(changes):
 
 
 def notify(file:Path, event_type:str):
-    print(f"File {file} has been {event_type}")
+    print(f"{CON_HEAD} File {file} has been {event_type}")

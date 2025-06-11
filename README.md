@@ -7,6 +7,10 @@ A Python package for monitoring file system changes.
 pip install watcher-fs
 ```
 
+## Command line usage
+
+See: https://pavelkrupala.github.io/watcher-fs/command_line.html
+
 ## Synchronous Usage
 
 ```python

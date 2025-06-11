@@ -12,13 +12,32 @@ Watcher-FS documentation
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
+
+   command_line
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules:
 
    modules
 
-Synchronous Example
-===================
+Installation
+------------
+
+.. code-block:: bash
+
+   pip install watcher-fs
+
+Command line tool `watcher-fs`
+------------------------------
+
+:doc:`command_line`
+
+
+Synchronous Watcher Example
+---------------------------
 
 .. code-block:: python
 
@@ -79,8 +98,8 @@ Synchronous Example
    watcher.check()
 
 
-Asynchronous Example
-====================
+Asynchronous Watcher Example
+----------------------------
 
 .. code-block:: python
 
@@ -141,7 +160,7 @@ Asynchronous Example
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -75,7 +75,13 @@ def create_actions_callback(actions_list: List[Union[str, Dict]]) -> callable:
 
     return actions_callback
 
-def register_watcher_callback(config, index=0):
+def register_watcher_callback(config: dict, index=0):
+    """Register a single path - trigger_type - actions definition to Watcher
+
+    Args:
+        config: Dict specification of what to register into Watcher instance. Contains keys: path, trigger_type, actions
+        index: Int index of the definition read from file configuration
+    """
     path = config.get('path', None)
 
     if path is None:
@@ -94,7 +100,7 @@ def register_watcher_callback(config, index=0):
         if type(a) == str: actions_list_str.append(a)
         elif type(a) == dict: actions_list_str.append(f"{a['action']}:{json.dumps({k: v for k, v in a.items() if k != 'action'})}")
 
-    print(f"Registering: {path} ({trigger_type_str}) - Actions: {", ".join(actions_list_str)}")
+    print(f"Registering: {path} ({trigger_type_str}) - Actions: {', '.join(actions_list_str)}")
 
     watcher.register(path, actions_callback, trigger_type=trigger_type, callback_extra=True)
 

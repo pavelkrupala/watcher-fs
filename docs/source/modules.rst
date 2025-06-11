@@ -6,3 +6,7 @@ Modules
 
    watcher
    async_watcher
+
+   cli
+
+   actions

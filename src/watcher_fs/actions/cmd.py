@@ -13,13 +13,13 @@ def action(changes, **kwargs):
     # print(f"CMD called with {changes}")
     if type(changes) == list:
         for change in changes:
-            cmd(*change, **kwargs)
+            cmd(change[0], event_type=change[1], **kwargs)
     else:
         # in this case it's just a tuple (file, event)
         cmd(changes[0], event_type=changes[1], **kwargs)
 
 
-def cmd(file:Path, event_type:str, **kwargs):
+def cmd(file: Path, event_type: str, **kwargs):
     """
         Execute a command in the console for a file change event.
 

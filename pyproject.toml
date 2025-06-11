@@ -24,8 +24,5 @@ Documentation = "https://pavelkrupala.github.io/watcher-fs"
 [project.scripts]
 watcher-fs = "watcher_fs.cli:main"
 
-[tool.setuptools]
-packages = ["watcher_fs"]
-
 [tool.setuptools.package-dir]
 "watcher_fs" = "src/watcher_fs"

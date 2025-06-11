@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>watcher &mdash; Watcher-FS 1.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=0ed52906"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="async_watcher" href="async_watcher.html" />
+    <link rel="prev" title="Modules" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Watcher-FS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Using command line tool</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">watcher</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#watcher_fs.watcher.FileWatcher"><code class="docutils literal notranslate"><span class="pre">FileWatcher</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.FileWatcher.path"><code class="docutils literal notranslate"><span class="pre">FileWatcher.path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.FileWatcher.callback"><code class="docutils literal notranslate"><span class="pre">FileWatcher.callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.FileWatcher.trigger_type"><code class="docutils literal notranslate"><span class="pre">FileWatcher.trigger_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.FileWatcher.callback_extra"><code class="docutils literal notranslate"><span class="pre">FileWatcher.callback_extra</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.FileWatcher.dispatch_callback"><code class="docutils literal notranslate"><span class="pre">FileWatcher.dispatch_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#watcher_fs.watcher.TriggerType"><code class="docutils literal notranslate"><span class="pre">TriggerType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.TriggerType.ANY_FILE"><code class="docutils literal notranslate"><span class="pre">TriggerType.ANY_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.TriggerType.PER_FILE"><code class="docutils literal notranslate"><span class="pre">TriggerType.PER_FILE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#watcher_fs.watcher.Watcher"><code class="docutils literal notranslate"><span class="pre">Watcher</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.Watcher.watchers"><code class="docutils literal notranslate"><span class="pre">Watcher.watchers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.Watcher.tracked_files"><code class="docutils literal notranslate"><span class="pre">Watcher.tracked_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.Watcher.file_to_watchers"><code class="docutils literal notranslate"><span class="pre">Watcher.file_to_watchers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.Watcher.last_run_time"><code class="docutils literal notranslate"><span class="pre">Watcher.last_run_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.Watcher.check"><code class="docutils literal notranslate"><span class="pre">Watcher.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#watcher_fs.watcher.Watcher.register"><code class="docutils literal notranslate"><span class="pre">Watcher.register()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="async_watcher.html">async_watcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">Cli - Command line tool <cite>watcher-fs</cite></a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html">Watcher-fs CLI Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#module-watcher_fs.actions.notify">Notify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#module-watcher_fs.actions.cmd">Cmd</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Watcher-FS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Modules</a></li>
+      <li class="breadcrumb-item active">watcher</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/watcher.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-watcher_fs.watcher">
+<span id="watcher"></span><h1>watcher<a class="headerlink" href="#module-watcher_fs.watcher" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="watcher_fs.watcher.FileWatcher">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">watcher_fs.watcher.</span></span><span class="sig-name descname"><span class="pre">FileWatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#watcher_fs.watcher.TriggerType" title="watcher_fs.watcher.TriggerType"><span class="pre">TriggerType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TriggerType.PER_FILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_extra</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#watcher_fs.watcher.FileWatcher" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages watching a specific file path or pattern for changes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.FileWatcher.path">
+<span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#watcher_fs.watcher.FileWatcher.path" title="Link to this definition"></a></dt>
+<dd><p>A string (glob pattern) or list of paths to watch.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.FileWatcher.callback">
+<span class="sig-name descname"><span class="pre">callback</span></span><a class="headerlink" href="#watcher_fs.watcher.FileWatcher.callback" title="Link to this definition"></a></dt>
+<dd><p>Function to call when changes are detected.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.FileWatcher.trigger_type">
+<span class="sig-name descname"><span class="pre">trigger_type</span></span><a class="headerlink" href="#watcher_fs.watcher.FileWatcher.trigger_type" title="Link to this definition"></a></dt>
+<dd><p>Type of trigger (PER_FILE or ANY_FILE).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.FileWatcher.callback_extra">
+<span class="sig-name descname"><span class="pre">callback_extra</span></span><a class="headerlink" href="#watcher_fs.watcher.FileWatcher.callback_extra" title="Link to this definition"></a></dt>
+<dd><p>If True, callback receives path and change type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="watcher_fs.watcher.FileWatcher.dispatch_callback">
+<span class="sig-name descname"><span class="pre">dispatch_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">change</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#watcher_fs.watcher.FileWatcher.dispatch_callback" title="Link to this definition"></a></dt>
+<dd><p>Execute the callback with the provided argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg</strong> – Single (path, change_type) tuple or list of such tuples.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="watcher_fs.watcher.TriggerType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">watcher_fs.watcher.</span></span><span class="sig-name descname"><span class="pre">TriggerType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#watcher_fs.watcher.TriggerType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration defining the types of file change triggers for Watcher.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.TriggerType.ANY_FILE">
+<span class="sig-name descname"><span class="pre">ANY_FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'any_file'</span></em><a class="headerlink" href="#watcher_fs.watcher.TriggerType.ANY_FILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.TriggerType.PER_FILE">
+<span class="sig-name descname"><span class="pre">PER_FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'per_file'</span></em><a class="headerlink" href="#watcher_fs.watcher.TriggerType.PER_FILE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">watcher_fs.watcher.</span></span><span class="sig-name descname"><span class="pre">Watcher</span></span><a class="headerlink" href="#watcher_fs.watcher.Watcher" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Monitors file system changes and dispatches callbacks for registered paths.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher.watchers">
+<span class="sig-name descname"><span class="pre">watchers</span></span><a class="headerlink" href="#watcher_fs.watcher.Watcher.watchers" title="Link to this definition"></a></dt>
+<dd><p>List of FileWatcher instances tracking paths or patterns.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher.tracked_files">
+<span class="sig-name descname"><span class="pre">tracked_files</span></span><a class="headerlink" href="#watcher_fs.watcher.Watcher.tracked_files" title="Link to this definition"></a></dt>
+<dd><p>Dict mapping file paths to their last modification times.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher.file_to_watchers">
+<span class="sig-name descname"><span class="pre">file_to_watchers</span></span><a class="headerlink" href="#watcher_fs.watcher.Watcher.file_to_watchers" title="Link to this definition"></a></dt>
+<dd><p>Dict mapping file paths to indices of associated watchers.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher.last_run_time">
+<span class="sig-name descname"><span class="pre">last_run_time</span></span><a class="headerlink" href="#watcher_fs.watcher.Watcher.last_run_time" title="Link to this definition"></a></dt>
+<dd><p>Timestamp of the last check() call.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#watcher_fs.watcher.Watcher.check" title="Link to this definition"></a></dt>
+<dd><p>Check for file changes and dispatch callbacks as needed.</p>
+<p>Updates tracked_files and file_to_watchers based on current file states.
+Detects added, modified, and deleted files, triggering callbacks accordingly.
+Sets last_run_time to the current time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="watcher_fs.watcher.Watcher.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#watcher_fs.watcher.TriggerType" title="watcher_fs.watcher.TriggerType"><span class="pre">TriggerType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TriggerType.PER_FILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_extra</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#watcher_fs.watcher.Watcher.register" title="Link to this definition"></a></dt>
+<dd><p>Register a file path or pattern to watch for changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paths</strong> – Glob pattern (str) or list of file paths to monitor.</p></li>
+<li><p><strong>callback</strong> – Function to call when changes are detected.</p></li>
+<li><p><strong>trigger_type</strong> – TriggerType enum (PER_FILE or ANY_FILE).</p></li>
+<li><p><strong>callback_extra</strong> – If True, pass (path, change_type) to callback.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>For string paths, uses glob to find matching files.</p></li>
+<li><p>For lists, only tracks existing files at registration.</p></li>
+<li><p>Stores initial modification times for tracked files.</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="async_watcher.html" class="btn btn-neutral float-right" title="async_watcher" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Pavel Křupala.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

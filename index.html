@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watcher-FS documentation &mdash; Watcher-FS 1.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=0ed52906"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using command line tool" href="command_line.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Watcher-FS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Using command line tool</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Watcher-FS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Watcher-FS documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="watcher-fs-documentation">
+<h1>Watcher-FS documentation<a class="headerlink" href="#watcher-fs-documentation" title="Link to this heading"></a></h1>
+<p><strong>Watcher-FS</strong> is a Python package for monitoring file system changes.</p>
+<p><strong>Version</strong>: 1.4</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command_line.html">Using command line tool</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="watcher.html">watcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="async_watcher.html">async_watcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">Cli - Command line tool <cite>watcher-fs</cite></a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html">Watcher-fs CLI Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#module-watcher_fs.actions.notify">Notify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actions.html#module-watcher_fs.actions.cmd">Cmd</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>watcher-fs
+</pre></div>
+</div>
+</section>
+<section id="command-line-tool-watcher-fs">
+<h2>Command line tool <cite>watcher-fs</cite><a class="headerlink" href="#command-line-tool-watcher-fs" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="command_line.html"><span class="doc">Using command line tool</span></a></p>
+</section>
+<section id="synchronous-watcher-example">
+<h2>Synchronous Watcher Example<a class="headerlink" href="#synchronous-watcher-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">watcher_fs.watcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">Watcher</span><span class="p">,</span> <span class="n">TriggerType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">test_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;test_dir&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">on_change_simple</span><span class="p">():</span>
+   <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something changed.&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">on_change</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+   <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">change</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_test_files</span><span class="p">(</span><span class="n">file_names</span><span class="p">):</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;Helper to create test files.&quot;&quot;&quot;</span>
+   <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+      <span class="n">file_path</span> <span class="o">=</span> <span class="n">test_dir</span> <span class="o">/</span> <span class="n">file_name</span>
+      <span class="n">file_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">):</span>
+              <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Initial content&quot;</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>  <span class="c1"># .styl</span>
+              <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a = #fa0&quot;</span><span class="p">)</span>
+
+
+<span class="n">create_test_files</span><span class="p">([</span><span class="s2">&quot;aaa.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;bbb.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;ccc.txt&quot;</span><span class="p">])</span>
+<span class="n">create_test_files</span><span class="p">([</span><span class="s2">&quot;skin.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;styl/default.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;styl/utils.styl&quot;</span><span class="p">])</span>
+
+<span class="n">watcher</span> <span class="o">=</span> <span class="n">Watcher</span><span class="p">()</span>
+
+<span class="c1"># register as glob pattern</span>
+<span class="n">watcher</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;test_dir/**/*.txt&quot;</span><span class="p">,</span> <span class="n">on_change_simple</span><span class="p">,</span> <span class="n">TriggerType</span><span class="o">.</span><span class="n">PER_FILE</span><span class="p">)</span>
+<span class="n">watcher</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;test_dir/**/*.py&quot;</span><span class="p">,</span> <span class="n">on_change</span><span class="p">,</span> <span class="n">TriggerType</span><span class="o">.</span><span class="n">ANY_FILE</span><span class="p">,</span> <span class="n">callback_extra</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># register as list of specified files</span>
+<span class="n">watcher</span><span class="o">.</span><span class="n">register</span><span class="p">([</span>
+   <span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;skin.styl&quot;</span><span class="p">,</span>
+   <span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;styl/default.styl&quot;</span><span class="p">,</span>
+   <span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;styl/utils.styl&quot;</span>
+<span class="p">],</span> <span class="n">on_change</span><span class="p">,</span> <span class="n">TriggerType</span><span class="o">.</span><span class="n">ANY_FILE</span><span class="p">,</span> <span class="n">callback_extra</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Simulate a check</span>
+<span class="n">watcher</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+
+<span class="c1"># do something</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;aaa.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Modified content&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;bbb.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Modified content&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;skin.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a = #0af&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;styl/default.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a = #f00&quot;</span><span class="p">)</span>
+
+<span class="c1"># check again</span>
+<span class="n">watcher</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="asynchronous-watcher-example">
+<h2>Asynchronous Watcher Example<a class="headerlink" href="#asynchronous-watcher-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">watcher_fs.async_watcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWatcher</span><span class="p">,</span> <span class="n">TriggerType</span>
+
+<span class="c1"># Example usage:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">test_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;test_dir&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_change_simple</span><span class="p">():</span>  <span class="c1"># CHANGED: Async callback</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something changed.&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">on_change</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>  <span class="c1"># CHANGED: Async callback</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">change</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_test_files</span><span class="p">(</span><span class="n">file_names</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to create test files (synchronous for simplicity).&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">test_dir</span> <span class="o">/</span> <span class="n">file_name</span>
+            <span class="n">file_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">):</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Initial content&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># .styl</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a = #fa0&quot;</span><span class="p">)</span>
+
+    <span class="n">create_test_files</span><span class="p">([</span><span class="s2">&quot;aaa.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;bbb.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;ccc.txt&quot;</span><span class="p">])</span>
+    <span class="n">create_test_files</span><span class="p">([</span><span class="s2">&quot;skin.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;styl/default.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;styl/utils.styl&quot;</span><span class="p">])</span>
+
+    <span class="n">watcher</span> <span class="o">=</span> <span class="n">AsyncWatcher</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">watcher</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;test_dir/**/*.txt&quot;</span><span class="p">,</span> <span class="n">on_change_simple</span><span class="p">,</span> <span class="n">TriggerType</span><span class="o">.</span><span class="n">PER_FILE</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">watcher</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;skin.styl&quot;</span><span class="p">,</span> <span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;styl/default.styl&quot;</span><span class="p">,</span> <span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;styl/utils.styl&quot;</span><span class="p">],</span>
+        <span class="n">on_change</span><span class="p">,</span> <span class="n">TriggerType</span><span class="o">.</span><span class="n">ANY_FILE</span><span class="p">,</span> <span class="n">callback_extra</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Simulate a check</span>
+    <span class="k">await</span> <span class="n">watcher</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+
+    <span class="c1"># Modify files (synchronous for simplicity)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;aaa.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Modified content&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;bbb.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Modified content&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;skin.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a = #0af&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_dir</span> <span class="o">/</span> <span class="s2">&quot;styl/default.styl&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;a = #f00&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Check again</span>
+    <span class="k">await</span> <span class="n">watcher</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="command_line.html" class="btn btn-neutral float-right" title="Using command line tool" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Pavel Křupala.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
